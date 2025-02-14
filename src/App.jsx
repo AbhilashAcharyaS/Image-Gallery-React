@@ -4,13 +4,21 @@ import { images } from "./Utils/imagesData";
 function App() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [index, setIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
   const openModal = (imgIndex) => {
     setIndex(imgIndex);
     setSelectedImage(images[imgIndex]);
+    setTimeout(() => {setIsVisible(true)
+    }, 50);
   };
 
-  const closeModal = () => setSelectedImage(null);
+  const closeModal = () => {
+    setIsVisible(false);
+    setTimeout(() => {setSelectedImage(null)
+    }, 300);
+  }
+
   const prevImage = () =>
     setIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
   const nextImage = () =>
@@ -30,7 +38,7 @@ function App() {
                 key={i}
                 src={src}
                 alt="wallpaper Image"
-                className="w-[130px] h-[100px] md:w-[320px] md:h-[240px] m-2 md:m-4 p-1 md:p-2 bg-white hover:scale-105 border border-slate-400 rounded-xl cursor-pointer shadow-xl"
+                className="w-[130px] h-[100px] md:w-[320px] md:h-[240px] m-2 md:m-4 p-1 md:p-2 bg-white hover:scale-105 border border-slate-400 rounded-xl cursor-pointer shadow-xl transition-transform duration-500"
                 onClick={() => openModal(i)}
               />
             ))}
@@ -39,22 +47,22 @@ function App() {
       )}
 
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-4">
+        <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} onTransitionEnd={() => { if (!isVisible) setSelectedImage(null); }}>
+          <div className={`p-4 transition-transform duration-300 transform ${isVisible ? 'scale-100' : 'scale-50'}` }>
             <img
               src={images[index]}
               alt="Selected"
-              className="md:max-w-[60%] md:max-h-[80%] mx-auto rounded-lg object-contain"
+              className={`md:max-w-[60%] md:max-h-[80%] mx-auto rounded-lg object-contain transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
             />
           </div>
           <button
-            className="absolute top-5 right-5 text-white cursor-pointer hover:bg-red-600 hover:scale-125"
+            className="absolute top-5 right-5 text-white cursor-pointer hover:bg-red-600 hover:scale-125 transition-transform duration-200"
             onClick={closeModal}
           >
             ✖
           </button>
           <button
-            className="absolute left-4 top-1/2 text-white cursor-pointer hover:scale-150 bg-black opacity-60"
+            className="absolute left-4 top-1/2 text-white cursor-pointer hover:scale-150 bg-black opacity-60 transition-transform duration-200"
             onClick={prevImage}
           >
             <svg
@@ -73,7 +81,7 @@ function App() {
             </svg>
           </button>
           <button
-            className="absolute right-4 top-1/2 text-white cursor-pointer hover:scale-150 bg-black opacity-60"
+            className="absolute right-4 top-1/2 text-white cursor-pointer hover:scale-150 bg-black opacity-60 transition-transform duration-200"
             onClick={nextImage}
           >
             <svg
